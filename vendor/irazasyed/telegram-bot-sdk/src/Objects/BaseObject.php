@@ -3,11 +3,11 @@
 namespace Telegram\Bot\Objects;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * Class BaseObject.
- *
- * @mixin Collection
  */
 abstract class BaseObject extends Collection
 {
@@ -19,6 +19,8 @@ abstract class BaseObject extends Collection
     public function __construct($data)
     {
         parent::__construct($this->getRawResult($data));
+
+        $this->mapRelatives();
     }
 
     /**
@@ -27,54 +29,6 @@ abstract class BaseObject extends Collection
      * @return array
      */
     abstract public function relations();
-
-    /**
-     * Magically access collection data.
-     *
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->getPropertyValue($property);
-    }
-
-    /**
-     * Magically map to an object class (if exists) and return data.
-     *
-     * @param      $property
-     * @param null $default
-     *
-     * @return mixed
-     */
-    protected function getPropertyValue($property, $default = null)
-    {
-        $property = snake_case($property);
-        if (! $this->offsetExists($property)) {
-            return value($default);
-        }
-
-        $value = $this->items[$property];
-
-        $relations = $this->relations();
-        if (isset($relations[$property])) {
-            return $relations[$property]::make($value);
-        }
-
-        /** @var BaseObject $class */
-        $class = 'Telegram\Bot\Objects\\'.studly_case($property);
-
-        if (class_exists($class)) {
-            return $class::make($value);
-        }
-
-        if (is_array($value)) {
-            return TelegramObject::make($value);
-        }
-
-        return $value;
-    }
 
     /**
      * Get an item from the collection by key.
@@ -86,13 +40,41 @@ abstract class BaseObject extends Collection
      */
     public function get($key, $default = null)
     {
-        $value = parent::get($key, $default);
-
-        if (null !== $value && is_array($value)) {
-            return $this->getPropertyValue($key, $default);
+        if ($this->offsetExists($key)) {
+            return is_array($this->items[$key]) ? new static($this->items[$key]) : $this->items[$key];
         }
 
-        return $value;
+        return value($default);
+    }
+
+    /**
+     * Map property relatives to appropriate objects.
+     *
+     * @return array|void
+     */
+    public function mapRelatives()
+    {
+        $relations = $this->relations();
+
+        if (empty($relations) || !is_array($relations)) {
+            return false;
+        }
+
+        $results = $this->all();
+        foreach ($results as $key => $data) {
+            foreach ($relations as $property => $class) {
+                if (!is_object($data) && isset($results[$key][$property])) {
+                    $results[$key][$property] = new $class($results[$key][$property]);
+                    continue;
+                }
+
+                if ($key === $property) {
+                    $results[$key] = new $class($results[$key]);
+                }
+            }
+        }
+
+        return $this->items = $results;
     }
 
     /**
@@ -114,7 +96,7 @@ abstract class BaseObject extends Collection
      */
     public function getRawResult($data)
     {
-        return array_get($data, 'result', $data);
+        return Arr::get($data, 'result', $data);
     }
 
     /**
@@ -124,7 +106,7 @@ abstract class BaseObject extends Collection
      */
     public function getStatus()
     {
-        return array_get($this->items, 'ok', false);
+        return Arr::get($this->items, 'ok', false);
     }
 
     /**
@@ -137,11 +119,21 @@ abstract class BaseObject extends Collection
      */
     public function __call($name, $arguments)
     {
-        if (! starts_with($name, 'get')) {
-            return false;
-        }
-        $property = substr($name, 3);
+        $action = substr($name, 0, 3);
 
-        return $this->getPropertyValue($property);
+        if ($action === 'get') {
+            $property = Str::snake(substr($name, 3));
+            $response = $this->get($property);
+
+            // Map relative property to an object
+            $relations = $this->relations();
+            if (null != $response && isset($relations[$property])) {
+                return new $relations[$property]($response);
+            }
+
+            return $response;
+        }
+
+        return false;
     }
 }

@@ -5,6 +5,7 @@ use Telegram\Bot\Api;
 $telegram = new Api('979015857:AAHSLDwfOTiYayD0X438RpAnzwmJxiYUCtQ');
 
 
+
 $result = $telegram->getWebhookUpdates();
 $chat_id = $result["message"]["chat"]["id"];
 
