@@ -1,13 +1,19 @@
 <?php
 include('vendor/autoload.php');
+
 use Telegram\Bot\Api;
 
 $telegram = new Api('979015857:AAHSLDwfOTiYayD0X438RpAnzwmJxiYUCtQ');
 
 
-
 $result = $telegram->getWebhookUpdates();
 $chat_id = $result["message"]["chat"]["id"];
+
+$text = $result["message"]["text"];
+if ($text == "/start") {
+    $reply = "Добро пожаловать в бота!";
+    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $reply]);
+}
 
 if ($curl = curl_init()) {
     $get = str_replace(' ', '+', $result["message"]["text"]);
@@ -61,7 +67,7 @@ if ($curl = curl_init()) {
                     continue;
                 } else
                     $clearNewLink = str_replace('""', "", $clearString);
-                    $clearNewLink = str_replace('url":"', "", $clearNewLink);
+                $clearNewLink = str_replace('url":"', "", $clearNewLink);
                 $clearNewLink = str_replace("\\", "", $clearNewLink);
                 array_push($newLinks, $clearNewLink);
             }
