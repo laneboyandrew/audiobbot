@@ -20,11 +20,6 @@ if ($curl = curl_init()) {
 
     $html = curl_exec($curl);
 
-    if ($text == "/start") {
-        $reply = "Добро пожаловать в бота!";
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение."]);
-    }
-
     preg_match_all('|<a class="bookkitem_cover"[^>]*?>|sei', $html, $arr);
 
     if (isset($arr[0])) {
@@ -38,6 +33,11 @@ if ($curl = curl_init()) {
             $clearLink = str_replace('">', "", $clearLink);
             $clearLink = str_replace(']', "", $clearLink);
             $clearLink = str_replace('"', "", $clearLink);
+        }
+
+        if ($text == "/start") {
+            $reply = "Добро пожаловать в бота!";
+            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение."]);
         }
 
         $links = explode(',', $clearLink);
