@@ -23,7 +23,7 @@ if ($curl = curl_init()) {
     preg_match_all('|<a class="bookkitem_cover"[^>]*?>|sei', $html, $arr);
 
     print_r($arr[0]);
-    if (isset($arr[0])) {
+
         $encoded = stripslashes(json_encode($arr[0]));
         preg_match_all('|href=[^>]*?>|sei', $encoded, $bookRefs);
 
@@ -73,9 +73,6 @@ if ($curl = curl_init()) {
             }
 //            print_r($newLinks);
             $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $newLinks]);
-        }
-    } else {
-        return "Not found:(";
     }
 } else {
     return "Курла нет!!";
