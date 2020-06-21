@@ -10,10 +10,6 @@ $result = $telegram->getWebhookUpdates();
 $chat_id = $result["message"]["chat"]["id"];
 
 $text = $result["message"]["text"];
-if ($text == "/start") {
-    $reply = "Добро пожаловать в бота!";
-    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение."]);
-}
 
 if ($curl = curl_init()) {
     $get = str_replace(' ', '+', $result["message"]["text"]);
@@ -23,6 +19,11 @@ if ($curl = curl_init()) {
     curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 
     $html = curl_exec($curl);
+
+    if ($text == "/start") {
+        $reply = "Добро пожаловать в бота!";
+        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение."]);
+    }
 
     preg_match_all('|<a class="bookkitem_cover"[^>]*?>|sei', $html, $arr);
 
