@@ -6,13 +6,13 @@ use Telegram\Bot\Api;
 $telegram = new Api('979015857:AAHSLDwfOTiYayD0X438RpAnzwmJxiYUCtQ');
 
 
-//$result = $telegram->getWebhookUpdates();
-//$chat_id = $result["message"]["chat"]["id"];
+$result = $telegram->getWebhookUpdates();
+$chat_id = $result["message"]["chat"]["id"];
 
-//$text = $result["message"]["text"];
+$text = $result["message"]["text"];
 
 if ($curl = curl_init()) {
-    $get = str_replace(' ', '+', 'Игра престолов');
+    $get = str_replace(' ', '+', $text);
 //    print_r($get);
     curl_setopt($curl, CURLOPT_URL, "https://knigavuhe.org/search/?q=" . $get);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -20,28 +20,30 @@ if ($curl = curl_init()) {
 
     $html = curl_exec($curl);
 
-    preg_match_all('|<a class="bookkitem_cover"[^>]*?>|si', $html, $arr);
+    preg_match_all('|<a class="bookkitem_cover"[^>]*?>|sei', $html, $arr);
 
-    print_r($arr[0]);
+//    print_r($arr[0]);
 
         $encoded = stripslashes(json_encode($arr[0]));
         preg_match_all('|href=[^>]*?>|sei', $encoded, $bookRefs);
-
+//        print_r($bookRefs[0]);
         foreach ($bookRefs as $bookRef) {
-            print_r($bookRef);
+//            print_r($bookRef);
             $clearRef = stripslashes(json_encode($bookRef));
             $clearLink = str_replace('["href="', "", $clearRef);
             $clearLink = str_replace('"href="', "", $clearLink);
             $clearLink = str_replace('">', "", $clearLink);
             $clearLink = str_replace(']', "", $clearLink);
             $clearLink = str_replace('"', "", $clearLink);
+            print_r($clearLink);
         }
 
 //            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $text]);
 
 
         $links = explode(',', $clearLink);
-//        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $links]);
+        $feedback = str_replace(',',' ', $clearLink);
+        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $feedback]);
 
 //        $result = $telegram->getWebhookUpdates();
 //        $exactBook = $result["message"]["text"];
@@ -72,7 +74,7 @@ if ($curl = curl_init()) {
                 $clearNewLink = str_replace("\\", "", $clearNewLink);
                 array_push($newLinks, $clearNewLink);
             }
-            print_r($newLinks);
+//            print_r($newLinks);
 //            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $newLinks]);
     }
 } else {
