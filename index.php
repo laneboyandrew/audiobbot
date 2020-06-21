@@ -9,10 +9,11 @@ $telegram = new Api('979015857:AAHSLDwfOTiYayD0X438RpAnzwmJxiYUCtQ');
 $result = $telegram->getWebhookUpdates();
 $chat_id = $result["message"]["chat"]["id"];
 
-$text = "Кккк";
-$fp = fopen("docurl.txt", "w");
-fwrite($fp, $text);
-fclose($fp);
+$text = $result["message"]["text"];
+if ($text == "/start") {
+    $reply = "Добро пожаловать в бота!";
+    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение."]);
+}
 
 if ($curl = curl_init()) {
     $get = str_replace(' ', '+', $result["message"]["text"]);
@@ -39,11 +40,6 @@ if ($curl = curl_init()) {
         }
 
         $links = explode(',', $clearLink);
-
-        $text = "Какой-то текст";
-        $fp = fopen("posleforeach.txt", "w");
-        fwrite($fp, $links);
-        fclose($fp);
         $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $clearLink]);
 
         $result = $telegram->getWebhookUpdates();
