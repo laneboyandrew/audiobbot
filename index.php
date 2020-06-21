@@ -6,10 +6,10 @@ use Telegram\Bot\Api;
 $telegram = new Api('979015857:AAHSLDwfOTiYayD0X438RpAnzwmJxiYUCtQ');
 
 
-$result = $telegram->getWebhookUpdates();
-$chat_id = $result["message"]["chat"]["id"];
+//$result = $telegram->getWebhookUpdates();
+//$chat_id = $result["message"]["chat"]["id"];
 
-$text = $result["message"]["text"];
+//$text = $result["message"]["text"];
 
 if ($curl = curl_init()) {
     $get = str_replace(' ', '+', 'Игра престолов');
@@ -37,14 +37,14 @@ if ($curl = curl_init()) {
             $clearLink = str_replace('"', "", $clearLink);
         }
 
-            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $text]);
+//            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $text]);
 
 
         $links = explode(',', $clearLink);
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $links]);
+//        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $links]);
 
-        $result = $telegram->getWebhookUpdates();
-        $exactBook = $result["message"]["text"];
+//        $result = $telegram->getWebhookUpdates();
+//        $exactBook = $result["message"]["text"];
 
         foreach ($links as $link) {
             if ($curl = curl_init()) {
@@ -73,9 +73,10 @@ if ($curl = curl_init()) {
                 array_push($newLinks, $clearNewLink);
             }
             print_r($newLinks);
-            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $newLinks]);
+//            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $newLinks]);
     }
 } else {
     return "Курла нет!!";
 }
+?>
 
