@@ -40,7 +40,7 @@ if ($curl = curl_init()) {
 
 
         $links = explode(',', $clearLink);
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $clearLink]);
+        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $links]);
 
         $result = $telegram->getWebhookUpdates();
         $exactBook = $result["message"]["text"];
