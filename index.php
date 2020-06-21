@@ -35,10 +35,8 @@ if ($curl = curl_init()) {
             $clearLink = str_replace('"', "", $clearLink);
         }
 
-        if ($text == "/start") {
-            $reply = "Добро пожаловать в бота!";
             $telegram->sendMessage(['chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение."]);
-        }
+
 
         $links = explode(',', $clearLink);
         $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $clearLink]);
