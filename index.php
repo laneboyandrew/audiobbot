@@ -12,9 +12,9 @@ $chat_id = $result["message"]["chat"]["id"];
 $text = $result["message"]["text"];
 
 if ($curl = curl_init()) {
-    $get = str_replace(' ', '+', $result["message"]["text"]);
-    print_r($get);
-    curl_setopt($curl, CURLOPT_URL, "https://knigavuhe.org/search/?q=" . $get);
+    $get = str_replace(' ', '+', $text);
+//    print_r($get);
+    curl_setopt($curl, CURLOPT_URL, "https://knigavuhe.org/search/?q=" . 'Игра+престолов');
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 
@@ -22,6 +22,7 @@ if ($curl = curl_init()) {
 
     preg_match_all('|<a class="bookkitem_cover"[^>]*?>|sei', $html, $arr);
 
+    print_r($arr[0]);
     if (isset($arr[0])) {
         $encoded = stripslashes(json_encode($arr[0]));
         preg_match_all('|href=[^>]*?>|sei', $encoded, $bookRefs);
@@ -70,7 +71,7 @@ if ($curl = curl_init()) {
                 $clearNewLink = str_replace("\\", "", $clearNewLink);
                 array_push($newLinks, $clearNewLink);
             }
-            print_r($newLinks);
+//            print_r($newLinks);
             $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $newLinks]);
         }
     } else {
