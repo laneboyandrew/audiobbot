@@ -12,7 +12,7 @@ $chat_id = $result["message"]["chat"]["id"];
 $text = $result["message"]["text"];
 
 if ($curl = curl_init()) {
-    $get = str_replace(' ', '+', $text);
+    $get = str_replace(' ', '+', 'Игра престолов');
 //    print_r($get);
     curl_setopt($curl, CURLOPT_URL, "https://knigavuhe.org/search/?q=" . $get);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -28,6 +28,7 @@ if ($curl = curl_init()) {
         preg_match_all('|href=[^>]*?>|sei', $encoded, $bookRefs);
 
         foreach ($bookRefs as $bookRef) {
+            print_r($bookRef);
             $clearRef = stripslashes(json_encode($bookRef));
             $clearLink = str_replace('["href="', "", $clearRef);
             $clearLink = str_replace('"href="', "", $clearLink);
@@ -36,7 +37,7 @@ if ($curl = curl_init()) {
             $clearLink = str_replace('"', "", $clearLink);
         }
 
-//            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение."]);
+            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => "Отправьте текстовое сообщение."]);
 
 
         $links = explode(',', $clearLink);
@@ -47,7 +48,7 @@ if ($curl = curl_init()) {
 
         foreach ($links as $link) {
             if ($curl = curl_init()) {
-                curl_setopt($curl, CURLOPT_URL, $exactBook);
+                curl_setopt($curl, CURLOPT_URL, $link);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($curl, CURLOPT_TIMEOUT, 30);
                 $audioPage = curl_exec($curl);
@@ -71,7 +72,7 @@ if ($curl = curl_init()) {
                 $clearNewLink = str_replace("\\", "", $clearNewLink);
                 array_push($newLinks, $clearNewLink);
             }
-//            print_r($newLinks);
+            print_r($newLinks);
             $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $newLinks]);
     }
 } else {
