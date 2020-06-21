@@ -20,7 +20,7 @@ if ($curl = curl_init()) {
 
     $html = curl_exec($curl);
 
-    preg_match_all('|<a class="bookkitem_cover"[^>]*?>|sei', $html, $arr);
+    preg_match_all('|<a class="bookkitem_cover"[^>]*?>|si', $html, $arr);
 
     print_r($arr[0]);
 
