@@ -19,6 +19,10 @@ class ComposerStaticInit1a9f16a4d5da1ec58de20549ae643cb3
     );
 
     public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            's0d3s\\' => 6,
+        ),
         'T' => 
         array (
             'Telegram\\Bot\\' => 13,
@@ -60,6 +64,10 @@ class ComposerStaticInit1a9f16a4d5da1ec58de20549ae643cb3
     );
 
     public static $prefixDirsPsr4 = array (
+        's0d3s\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/s0d3s/tg-long-req/src',
+        ),
         'Telegram\\Bot\\' => 
         array (
             0 => __DIR__ . '/..' . '/irazasyed/telegram-bot-sdk/src',
