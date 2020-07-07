@@ -18,23 +18,43 @@ if ($curl = curl_init()) {
 
     $html = curl_exec($curl);
     preg_match_all('/<a class="bookkitem_cover" href="(.*)">/m', $html, $arr);
-    $links = $arr[1];
-//    var_dump($links);
+    preg_match_all('/<a href="\/author\/[\w]/"(.*)<\/a>/m', $html, $arr2);
+    preg_match_all('/ alt="(.*)"/m', $html, $arr3);
 
-    foreach ($links as $link) {
-        if ($chat_id && $link) {
-            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $link]);
-        } else
-            return "Нет chat_id или ссылки на книгу";
+//                var_dump($telegram->sendMessage(['chat_id' => '1488', 'text' => 'https://knigavuhe.org' . $bookLink . '\n' . '\n' . $bookName]));
+//    var_dump(implode(' ', $arr[1]));
+//    var_dump(implode(' ', $arr2[1]));
+//    var_dump(implode(' ', $arr3[1]));
+
+    foreach ($arr[1] as $link){
+        $fullLink = 'https://knigavuhe.org' . $link;
+        $telegram->sendMessage(['chat_id' => '1488', 'text' => $fullLink]);
+
     }
 
-    $bookToFind = $result['message']['text'];
+//    var_dump($arr3);
+//    foreach ($arr3[1] as $bookName){
+//    } else
+//        var_dump($bookName);
+//        }
+//    var_dump($links);
+//    var_dump($authorNames);
+
+//    foreach ($arr[1] as $link) {
+
+//    }
+//
+
+    die;
+//    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $link . '\n' . $authorName . '\n' . $bookName]);
+
+//    $bookToFind = $result['message']['text'];
 //    foreach ($links as $link) {
-        if ($curl = curl_init()) {
-            curl_setopt($curl, CURLOPT_URL, 'https://knigavuhe.org' . $bookToFind);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-            $audioPage = curl_exec($curl);
+    if ($curl = curl_init()) {
+        curl_setopt($curl, CURLOPT_URL, 'https://knigavuhe.org' . $bookToFind);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+        $audioPage = curl_exec($curl);
 //        }
 //        var_dump($audioPage);
     }
@@ -49,14 +69,12 @@ if ($curl = curl_init()) {
             if (strpos($clearString, '0.mp3')) {
                 continue;
             } else
-                $clearNewLink = str_replace('""', "", $clearString);
-            $clearNewLink = str_replace('url":"', "", $clearNewLink);
-            $clearNewLink = str_replace("\\", "", $clearNewLink);
-            array_push($newLinks, $clearNewLink);
+                $clearNewLink = str_replace(["\\", 'url":"', '""'], "", $clearString);
+                array_push($newLinks, $clearNewLink);
         }
 //        var_dump($clearNewLink);
         var_dump($newLinks);
-            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $newLinks]);
+//        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $newLinks]);
     }
 } else {
     return "Курла нет!!";
