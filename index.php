@@ -23,9 +23,8 @@ if ($curl = curl_init()) {
 
     foreach ($arr[1] as $link){
         $fullLink = 'https://knigavuhe.org' . $link;
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $fullLink]);
-
     }
+    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $fullLink]);
 
 //    var_dump($arr3);
 //    foreach ($arr3[1] as $bookName){
