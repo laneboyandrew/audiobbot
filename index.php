@@ -3,7 +3,8 @@ include('vendor/autoload.php');
 
 use Telegram\Bot\Api;
 
-$telegram = new Api('979015857:AAHSLDwfOTiYayD0X438RpAnzwmJxiYUCtQ');
+$telegram = new Api('1330701752:AAHHElSKS6kijUWxDiGrumKAsqrGz2asijU
+');
 
 $result = $telegram->getWebhookUpdates();
 $chat_id = $result["message"]["chat"]["id"];
