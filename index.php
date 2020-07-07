@@ -21,11 +21,6 @@ if ($curl = curl_init()) {
     preg_match_all('/<a href="\/author\/[\w]/"(.*)<\/a>/m', $html, $arr2);
     preg_match_all('/ alt="(.*)"/m', $html, $arr3);
 
-//                var_dump($telegram->sendMessage(['chat_id' => '1488', 'text' => 'https://knigavuhe.org' . $bookLink . '\n' . '\n' . $bookName]));
-//    var_dump(implode(' ', $arr[1]));
-//    var_dump(implode(' ', $arr2[1]));
-//    var_dump(implode(' ', $arr3[1]));
-
     foreach ($arr[1] as $link){
         $fullLink = 'https://knigavuhe.org' . $link;
         $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $fullLink]);
