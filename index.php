@@ -25,7 +25,20 @@ if ($curl = curl_init()) {
     foreach ($arr[1] as $link){
         $fullLink = 'https://knigavuhe.org' . $link;
     }
-    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $fullLink]);
+
+    $keyboard = array(
+        array(array('callback_data'=>'/butt1','text'=>'Кнопка 1')),
+        array(array('callback_data'=>'/buut2','text'=>'Кнопка 2')),
+    );
+
+    $reply_markup = $telegram->replyKeyboardMarkup([
+        'keyboard' => $keyboard,
+        'resize_keyboard' => true,
+        'one_time_keyboard' => false
+    ]);
+
+    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $fullLink, 'reply_markup' => $reply_markup]);
+
 
 //    var_dump($arr3);
 //    foreach ($arr3[1] as $bookName){
